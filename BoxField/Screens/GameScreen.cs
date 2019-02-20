@@ -17,13 +17,17 @@ namespace BoxField
 
         //used to draw boxes on screen
         SolidBrush boxBrush = new SolidBrush(Color.White);
-        
-        //TODO - create a list to hold a column of boxes        
 
+        //lists to hold a column of boxes   
+        List<Box> leftBoxes = new List<Box>();
+        List<Box> rightBoxes = new List<Box>();
+
+        int boxCounter = 0;
 
         public GameScreen()
         {
             InitializeComponent();
+            OnStart();
         }
 
         /// <summary>
@@ -32,6 +36,8 @@ namespace BoxField
         public void OnStart()
         {
             //TODO - set game start values
+            Box b1 = new Box(25, 0, 25);
+            leftBoxes.Add(b1);
         }
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -64,11 +70,26 @@ namespace BoxField
 
         private void gameLoop_Tick(object sender, EventArgs e)
         {
-            //TODO - update location of all boxes (drop down screen)
+            //update location of all boxes (drop down screen)
+            foreach (Box b in leftBoxes)
+            {
+                b.y = b.y + 3;
+            }
 
-            //TODO - remove box if it has gone of screen
+            //remove box if it has gone of screen
+            if (leftBoxes[0].y > this.Height)
+            {
+                leftBoxes.RemoveAt(0);
+            }
 
-            //TODO - add new box if it is time
+            //add new box if it is time
+            boxCounter++;
+
+            if (boxCounter % 10 == 0)
+            {
+                Box b1 = new Box(25, 0, 25);
+                leftBoxes.Add(b1);
+            }
 
             Refresh();
         }
@@ -76,6 +97,10 @@ namespace BoxField
         private void GameScreen_Paint(object sender, PaintEventArgs e)
         {
             //TODO - draw boxes to screen
+            foreach (Box b in leftBoxes)
+            {
+                e.Graphics.FillRectangle(boxBrush, b.x, b.y, b.size, b.size);
+            }
         }
     }
 }
